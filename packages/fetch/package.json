@@ -1,0 +1,16 @@
+{
+  "name": "fetch",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsx ./src",
+    "build": "tsc --build",
+    "test": "vitest src"
+  },
+  "devDependencies": {
+    "msw": "^2.7.0",
+    "vitest": "^3.0.3"
+  }
+}
