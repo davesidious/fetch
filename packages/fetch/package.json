@@ -10,7 +10,8 @@
     "test": "vitest src"
   },
   "devDependencies": {
-    "msw": "^2.7.0",
-    "vitest": "^3.0.3"
+    "linting": "*",
+    "testing": "*",
+    "typescript": "*"
   }
 }

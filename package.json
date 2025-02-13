@@ -6,26 +6,16 @@
   "license": "MIT",
   "type": "module",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "tooling/*"
   ],
   "devDependencies": {
-    "@eslint/js": "^9.18.0",
-    "@types/node": "20",
-    "@typescript-eslint/eslint-plugin": "^8.21.0",
-    "@typescript-eslint/parser": "^8.21.0",
-    "@vitest/coverage-v8": "^3.0.3",
-    "@vitest/ui": "^3.0.3",
-    "eslint": "^9.18.0",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-plugin-prettier": "^5.2.3",
-    "globals": "^15.14.0",
-    "prettier": "^3.4.2",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.21.0",
-    "vitest": "^3.0.3"
+    "linting": "*",
+    "testing": "*",
+    "typescript": "*"
   },
   "scripts": {
+    "build": "tsc --build",
     "lint": "eslint",
     "test": "vitest"
   }

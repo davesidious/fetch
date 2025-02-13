@@ -1,0 +1,12 @@
+{
+  "name": "testing",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@vitest/coverage-v8": "^3.0.3",
+    "@vitest/ui": "^3.0.3",
+    "msw": "^2.7.0",
+    "vitest": "^3.0.3"
+  }
+}

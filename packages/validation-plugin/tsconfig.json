@@ -1,7 +1,9 @@
 {
+  "extends": "@fetch-monorepo/typescript/tsconfig.json",
   "include": ["./src"],
   "exclude": ["./src/**/*.spec.ts"],
   "compilerOptions": {
-    "outDir": "./dist"
+    "rootDir": "./src",
+    "outDir": "./dist",
   }
 }
