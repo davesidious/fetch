@@ -1,15 +1,18 @@
-import { it, expect } from "vitest";
-import * as zod from "zod";
-import { validateResponse } from "./validateResponse";
-import { createFetch, Plugin } from "fetch";
+import { buildFetch, Plugin } from "fetch";
+import { expect, it } from "testing";
 
-const mockResponse = (body: unknown): Plugin => ({
-  onEarlyResponse: () => new Response(JSON.stringify(body)),
-});
+import { schema } from "./";
+import { validateResponse } from "./validateResponse";
+
+const mockResponse =
+  (body: unknown): Plugin =>
+  () => ({ preFetch: () => new Response(JSON.stringify(body)) });
 
 it("validates response bodies", async () => {
-  const plugin = validateResponse(zod.object({ foo: zod.literal("bar") }));
-  const fetch = createFetch(mockResponse({ foo: "bar" }), plugin);
+  const plugin = validateResponse(
+    schema.object({ foo: schema.literal("bar") }),
+  );
+  const fetch = buildFetch(mockResponse({ foo: "bar" }), plugin);
 
   const res = await fetch("http://host.invalid");
   const body = await res.json();
@@ -19,10 +22,12 @@ it("validates response bodies", async () => {
 });
 
 it("throws an error if the body does not validate against the schema", async () => {
-  const plugin = validateResponse(zod.object({ foo: zod.literal("bar") }));
-  const fetch = createFetch(mockResponse({ foo: "baz" }), plugin);
+  const plugin = validateResponse(
+    schema.object({ foo: schema.literal("bar") }),
+  );
+  const fetch = buildFetch(mockResponse({ foo: "baz" }), plugin);
 
   const res = fetch("http://host.invalid");
 
-  await expect(res).rejects.toBeInstanceOf(zod.ZodError);
+  await expect(res).rejects.toBeInstanceOf(schema.ZodError);
 });

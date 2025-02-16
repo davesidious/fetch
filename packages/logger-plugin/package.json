@@ -1,21 +1,17 @@
 {
-  "name": "fetch-monorepo",
+  "name": "logger-plugin",
   "version": "1.0.0",
-  "private": true,
+  "main": "index.js",
   "license": "MIT",
-  "type": "module",
-  "workspaces": [
-    "packages/*",
-    "tooling/*"
-  ],
   "devDependencies": {
+    "@fetch-monorepo/typescript": "*",
+    "fetch": "*",
     "linting": "*",
     "testing": "*",
-    "typescript": "*"
+    "debugging": "*"
   },
   "scripts": {
     "build": "tsc --build",
-    "lint": "eslint",
     "test": "vitest"
   }
 }

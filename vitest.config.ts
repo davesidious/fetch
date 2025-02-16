@@ -6,7 +6,9 @@ export default defineConfig({
     coverage: {
       enabled: true,
       include: ["**/src/**/*.ts"],
+      reporter: "lcov",
     },
+    reporters: ["default"],
     ui: !process.env.CI,
   },
 });

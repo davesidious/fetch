@@ -1,2 +1,3 @@
-export * from "./createFetch";
-export * from "./types";
+export * from "./buildFetch";
+export type * from "./types";
+export * from "./wrapFetch";

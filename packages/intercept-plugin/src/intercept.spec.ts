@@ -1,30 +1,59 @@
-import { it, expect } from "vitest";
+import { buildFetch, wrapFetch } from "fetch";
+import { describe, expect, it } from "testing";
+
 import { intercept } from "./intercept";
-import { createFetch, Plugin } from "fetch";
 
-const mockResponse: Plugin = {
-  onEarlyResponse: () => new Response("mocked"),
-};
+const mockedFetch = buildFetch(() => ({
+  preFetch: () => new Response("not intercepted"),
+}));
 
-it("intercepts matched routes", async () => {
-  const url = "http://host.invalid/";
-  const method = "POST";
-  const plugin = intercept({ method, url }, () => new Response("body"));
+const path = "/path";
+const url = `http://host.invalid${path}`;
+const method = "POST";
 
-  const res = await createFetch(plugin)(url, { method });
+describe("intercepts matched routes", () => {
+  it("matches by method", async () => {
+    const plugin = intercept({ method }, () => new Response("intercepted"));
 
-  expect(await res.text()).toBe("body");
+    const res = await wrapFetch(mockedFetch, plugin)(url, { method });
+
+    expect(await res.text()).toBe("intercepted");
+  });
+
+  it("matches by URL", async () => {
+    const plugin = intercept({ url }, () => new Response("intercepted"));
+
+    const res = await wrapFetch(mockedFetch, plugin)(url);
+
+    expect(await res.text()).toBe("intercepted");
+  });
+
+  it("matches by path", async () => {
+    const plugin = intercept({ path }, () => new Response("intercepted"));
+
+    const res = await wrapFetch(mockedFetch, plugin)(url);
+
+    expect(await res.text()).toBe("intercepted");
+  });
+
+  it("supports limiting interceptions via a counter", async () => {
+    const fetch = await wrapFetch(
+      mockedFetch,
+      intercept({ count: 1 }, () => new Response("first")),
+      intercept({ count: 2 }, () => new Response("second")),
+    );
+
+    expect(await (await fetch(url)).text()).toBe("first");
+    expect(await (await fetch(url)).text()).toBe("second");
+    expect(await (await fetch(url)).text()).toBe("second");
+    expect(await (await fetch(url)).text()).toBe("not intercepted");
+  });
 });
 
 it("does not intercept unmatched routes", async () => {
-  const url = "http://host.invalid/";
-  const method = "POST";
-  const plugin = intercept({ method, url }, () => new Response("body"));
+  const plugin = intercept({ method, url }, () => new Response("intercepted"));
 
-  const res = await createFetch(
-    plugin,
-    mockResponse,
-  )("http://different.invalid");
+  const res = await wrapFetch(mockedFetch, plugin)("http://different.invalid");
 
-  expect(await res.text()).toBe("mocked");
+  expect(await res.text()).toBe("not intercepted");
 });
