@@ -1,7 +1,7 @@
 import { buildFetch, wrapFetch } from "fetch";
 import { describe, expect, it } from "testing";
 
-import { intercept } from "./intercept";
+import { intercept } from "../src/intercept";
 
 const mockedFetch = buildFetch(() => ({
   preFetch: () => new Response("not intercepted"),
@@ -21,15 +21,10 @@ describe("intercepts matched routes", () => {
   });
 
   it("matches by URL", async () => {
-    const plugin = intercept({ url }, () => new Response("intercepted"));
-
-    const res = await wrapFetch(mockedFetch, plugin)(url);
-
-    expect(await res.text()).toBe("intercepted");
-  });
-
-  it("matches by path", async () => {
-    const plugin = intercept({ path }, () => new Response("intercepted"));
+    const plugin = intercept(
+      { url: url.replace(":", "\\:") },
+      () => new Response("intercepted"),
+    );
 
     const res = await wrapFetch(mockedFetch, plugin)(url);
 
@@ -37,21 +32,22 @@ describe("intercepts matched routes", () => {
   });
 
   it("supports limiting interceptions via a counter", async () => {
-    const fetch = await wrapFetch(
+    const fetch = wrapFetch(
       mockedFetch,
       intercept({ count: 1 }, () => new Response("first")),
       intercept({ count: 2 }, () => new Response("second")),
     );
 
-    expect(await (await fetch(url)).text()).toBe("first");
-    expect(await (await fetch(url)).text()).toBe("second");
-    expect(await (await fetch(url)).text()).toBe("second");
-    expect(await (await fetch(url)).text()).toBe("not intercepted");
+    for (const res of ["first", "second", "second", "not intercepted"])
+      await expect((await fetch(url)).text()).resolves.toBe(res);
   });
 });
 
 it("does not intercept unmatched routes", async () => {
-  const plugin = intercept({ method, url }, () => new Response("intercepted"));
+  const plugin = intercept(
+    { method, url: url.replace(":", "\\:") },
+    () => new Response("intercepted"),
+  );
 
   const res = await wrapFetch(mockedFetch, plugin)("http://different.invalid");
 

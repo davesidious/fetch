@@ -1,8 +1,8 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "testing";
 import { http, HttpResponse, setupServer } from "testing/mockServer";
 
-import { buildFetch } from "./buildFetch";
-import { Plugin, TypedResponse } from "./types";
+import { buildFetch } from "../src/buildFetch";
+import { Plugin, TypedResponse } from "../src/types";
 
 const server = setupServer(
   http.get("*", ({ request }) => HttpResponse.json({ url: request.url })),

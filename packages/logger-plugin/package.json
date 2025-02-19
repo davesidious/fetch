@@ -1,7 +1,9 @@
 {
   "name": "logger-plugin",
   "version": "1.0.0",
-  "main": "index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "license": "MIT",
   "devDependencies": {
     "@fetch-monorepo/typescript": "*",

@@ -1,7 +1,9 @@
 {
   "name": "validation-plugin",
   "version": "1.0.0",
-  "main": "index.js",
+  "exports": {
+    ".": "./dist/validation.js"
+  },
   "license": "MIT",
   "dependencies": {
     "fetch": "*",

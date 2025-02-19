@@ -1,7 +1,7 @@
 import { buildFetch } from "fetch";
 import { expect, it, mockResponse, vi } from "testing";
 
-import { loggerPlugin } from "./logger";
+import { loggerPlugin } from "../src/logger";
 
 it("calls a callback on each request", async () => {
   const callback = vi.fn();

@@ -2,16 +2,19 @@
   "name": "intercept-plugin",
   "version": "1.0.0",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/intercept.js"
   },
   "license": "MIT",
   "devDependencies": {
+    "@fetch-monorepo/typescript": "*",
     "fetch": "*",
     "linting": "*",
-    "testing": "*",
-    "@fetch-monorepo/typescript": "*"
+    "testing": "*"
   },
   "scripts": {
     "build": "tsc --build"
+  },
+  "dependencies": {
+    "url-pattern": "^1.0.3"
   }
 }

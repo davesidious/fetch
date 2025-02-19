@@ -1,7 +1,7 @@
 import { buildFetch } from "fetch";
 import { expect, it } from "testing";
 
-import { cachePlugin } from "./cache";
+import { cachePlugin } from "../src/cache";
 
 it("caches responses", async () => {
   const cacheTtl = 1000;

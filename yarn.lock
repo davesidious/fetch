@@ -2202,6 +2202,11 @@ url-parse@^1.5.3:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
 
+url-pattern@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/url-pattern/-/url-pattern-1.0.3.tgz#0409292471b24f23c50d65a47931793d2b5acfc1"
+  integrity sha512-uQcEj/2puA4aq1R3A2+VNVBgaWYR24FdWjl7VNW83rnWftlhyzOZ/tBjezRiC2UkIzuxC8Top3IekN3vUf1WxA==
+
 vite-node@3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/vite-node/-/vite-node-3.0.3.tgz#2127458eae8c78b92f609f4c84d613599cd14317"

@@ -3,12 +3,13 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     workspace: ["packages/*"],
+    include: ["tests/**/*.spec.ts"],
     coverage: {
       enabled: true,
       include: ["**/src/**/*.ts"],
+      exclude: ["tooling/**"],
       reporter: "lcov",
     },
-    reporters: ["default"],
     ui: !process.env.CI,
   },
 });
