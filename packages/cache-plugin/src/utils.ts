@@ -9,14 +9,15 @@ export const convert = <T extends Request | Response>(
 };
 
 export const replaceHeaders = (res: Response, headers: CachePolicy.Headers) => {
-  res.headers.forEach((_, k) => res.headers.delete(k));
+  for (const h of res.headers.keys()) res.headers.delete(h);
 
-  Object.entries(headers).forEach(
-    ([k, v]) => v && toArray(v).forEach((v) => res.headers.append(k, v)),
-  );
+  for (const h in headers)
+    toArray(headers[h]).forEach((v) => is(v) && res.headers.append(h, v));
 
   return res;
 };
+
+const is = <T>(thing: T): thing is Exclude<T, undefined> => thing !== undefined;
 
 const toArray = <T>(thing: T[] | T): T[] =>
   Array.isArray(thing) ? thing : [thing];
