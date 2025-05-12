@@ -8,12 +8,12 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "fetch": "*",
     "linting": "*",
     "testing": "*",
     "@fetch-monorepo/typescript": "*"
   },
   "scripts": {
-    "build": "tsc --build"
+    "build": "tsc --build",
+    "test": "vitest"
   }
 }

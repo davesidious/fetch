@@ -1,11 +1,11 @@
-export interface Plugin<ResBody = unknown> {
+export type Plugin<ResBody = unknown> = () => {
   /**
    * Allows a plugin to modify or replace the `Request` object passed to `fetch`.
    *
    * @param req The request to be modified or replaced
    * @returns A `Request` object
    */
-  onRequest?: (req: Request) => Promise<Request> | Request;
+  onRequest?: (req: Request) => Promisable<Request>;
 
   /**
    * Allows a plugin to return a response, skipping the actual call to `fetch`.
@@ -13,9 +13,7 @@ export interface Plugin<ResBody = unknown> {
    * @param req The initiating `Request`
    * @returns A response or void
    */
-  onEarlyResponse?: (
-    req: Request,
-  ) => Promise<TypedResponse | void> | TypedResponse | void;
+  preFetch?: (req: Request) => Promisable<TypedResponse | void>;
 
   /**
    * Allows a plugin to modify or replace the received response.
@@ -24,30 +22,34 @@ export interface Plugin<ResBody = unknown> {
    * @param req The initiating request
    * @returns A response
    */
-  onResponse?: (
+  postFetch?: (
     res: Response,
     req: Request,
-  ) => TypedResponse<ResBody> | Promise<TypedResponse<ResBody>>;
+  ) => Promisable<TypedResponse<ResBody> | void>;
 
   /**
    * Defines an error handler. If no error handler returns a new request,
    * the original error is thrown.
    *
    * @param err The caught error
+   * @param req The initiating request
    * @returns a Request to be re-fetched by the same plugins, or void to pass
    *  to the next error handler.
    */
-  onError?: (err: unknown) => Promise<Request | void> | Request | void;
-}
+  onError?: (err: unknown, req: Request) => Promisable<Request | void>;
+};
 
-export type FetchArgs = Parameters<(typeof globalThis)["fetch"]>;
+export type Fetch = (typeof globalThis)["fetch"];
+export type FetchArgs = Parameters<Fetch>;
 
-export type ResponseShape<Plugins> = Plugins extends [Plugin<infer Body>]
+export type ResponseType<Plugins> = Plugins extends [Plugin<infer Body>]
   ? Body
   : Plugins extends [Plugin<infer Body>, ...infer Rest]
-    ? Body & ResponseShape<Rest>
+    ? Body & ResponseType<Rest>
     : never;
 
-export type TypedResponse<Body = never> = Omit<Response, "json"> & {
+export type TypedResponse<Body = unknown> = Omit<Response, "json"> & {
   json: () => Promise<Body>;
 };
+
+type Promisable<T> = Promise<T> | T;

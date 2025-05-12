@@ -2,6 +2,8 @@
   "files": [],
   "references": [
     { "path": "./packages/fetch" },
+    { "path": "./packages/cache-plugin" },
+    { "path": "./packages/debugging" },
     { "path": "./packages/intercept-plugin" },
     { "path": "./packages/validation-plugin" },
   ]
