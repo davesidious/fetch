@@ -2,35 +2,37 @@ import { Plugin, FetchArgs, TypedResponse, ResponseShape } from "./types";
 
 export const createFetch = <
   Plugins extends Plugin[],
-  Res extends TypedResponse = TypedResponse<ResponseShape<Plugins>>,
+  Res = ResponseShape<Plugins>,
 >(
   ...plugins: Plugins
 ) => {
-  const getFns = <Fn extends keyof Plugin>(fn: Fn): Plugin[Fn][] =>
-    plugins.filter((p) => fn in p).map((p) => p[fn]);
+  const getFns = <Fn extends keyof Plugin<Res>>(fn: Fn) =>
+    plugins
+      .filter((p): p is Required<Plugin<Res>> => fn in p)
+      .map((p) => p[fn]);
 
-  return (...args: FetchArgs): Promise<Res> => {
-    const req = getFns("onRequest").reduce(
-      (req, p) => p(req),
-      new Request(...args),
-    );
+  return async (...args: FetchArgs): Promise<TypedResponse<Res>> => {
+    let req = new Request(...args);
+    let earlyRes: Response | void = void 0;
 
-    const earlyResponse: Promise<Res> = getFns("onEarlyResponse").reduce(
-      (res, p) => res.then((res) => res || Promise.resolve(p(req))),
-      Promise.resolve(undefined),
-    );
+    for (const fn of getFns("onRequest")) req = req || (await fn(req));
+    for (const fn of getFns("onEarlyResponse"))
+      earlyRes = earlyRes ?? (await fn(req));
 
-    const res = earlyResponse.then((res) => res || fetch(req));
+    try {
+      let res = earlyRes ?? fetch(req);
 
-    return getFns("onResponse")
-      .reduce((res, p) => res.then((res) => p(res, req)), res)
-      .catch((err) =>
-        getFns("onError")
-          .reduce(
-            (res, p) => res.then((res) => res || Promise.resolve(p(err))),
-            Promise.resolve(undefined),
-          )
-          .then((res) => res || Promise.reject(err)),
-      );
+      for (const fn of getFns("onResponse")) res = fn(await res, req);
+
+      return res;
+    } catch (err) {
+      let req: Request | void = void 0;
+
+      for (const fn of getFns("onError")) req = req ?? (await fn(err));
+
+      if (!req) throw err;
+
+      return createFetch<Plugins, Res>(...plugins)(req);
+    }
   };
 };
