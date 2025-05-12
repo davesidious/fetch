@@ -1,15 +1,14 @@
 import { buildFetch, Plugin } from "fetch";
 import { expect, it } from "testing";
 
-import { schema } from "./";
-import { validateResponse } from "./validateResponse";
+import { schema, validationPlugin } from "../src/validation";
 
 const mockResponse =
   (body: unknown): Plugin =>
   () => ({ preFetch: () => new Response(JSON.stringify(body)) });
 
 it("validates response bodies", async () => {
-  const plugin = validateResponse(
+  const plugin = validationPlugin(
     schema.object({ foo: schema.literal("bar") }),
   );
   const fetch = buildFetch(mockResponse({ foo: "bar" }), plugin);
@@ -22,7 +21,7 @@ it("validates response bodies", async () => {
 });
 
 it("throws an error if the body does not validate against the schema", async () => {
-  const plugin = validateResponse(
+  const plugin = validationPlugin(
     schema.object({ foo: schema.literal("bar") }),
   );
   const fetch = buildFetch(mockResponse({ foo: "baz" }), plugin);

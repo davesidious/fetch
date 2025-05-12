@@ -1,6 +1,6 @@
 import { describe, expect, it } from "testing";
 
-import { replaceHeaders } from "./utils";
+import { replaceHeaders } from "../src/utils";
 
 describe("", () => {
   it("replaces headers", () => {

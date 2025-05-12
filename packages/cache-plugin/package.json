@@ -1,8 +1,15 @@
 {
   "name": "cache-plugin",
   "version": "1.0.0",
-  "main": "index.js",
+  "exports": {
+    ".": "./dist/cache.js"
+  },
   "license": "MIT",
+  "dependencies": {
+    "@types/http-cache-semantics": "^4.0.4",
+    "http-cache-semantics": "^4.1.1",
+    "lru-cache": "^11.0.2"
+  },
   "devDependencies": {
     "@fetch-monorepo/typescript": "*",
     "fetch": "*",
@@ -13,10 +20,5 @@
   "scripts": {
     "build": "tsc --build",
     "test": "vitest"
-  },
-  "dependencies": {
-    "@types/http-cache-semantics": "^4.0.4",
-    "http-cache-semantics": "^4.1.1",
-    "lru-cache": "^11.0.2"
-  }
+  }  
 }
