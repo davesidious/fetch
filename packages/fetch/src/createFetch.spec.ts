@@ -1,8 +1,8 @@
-import { beforeAll, afterAll, afterEach, it, expect } from "vitest";
+import { beforeAll, afterAll, afterEach, it, expect, describe } from "vitest";
 import { setupServer } from "msw/node";
 import { http, HttpResponse } from "msw";
-
-import { createFetch, Plugin } from "./createFetch";
+import { createFetch } from "./createFetch";
+import { Plugin, TypedResponse } from "./types";
 
 const server = setupServer(
   http.get("*", ({ request }) => HttpResponse.json({ url: request.url })),
@@ -11,6 +11,11 @@ const server = setupServer(
 beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
 afterAll(() => server.close());
 afterEach(() => server.resetHandlers());
+
+const createTypedResponse = <B>(body: B): TypedResponse<B> =>
+  new Response(JSON.stringify(body), {
+    headers: { "content-type": "application/json" },
+  });
 
 it("supports rewriting requests", async () => {
   const newUrl = "http://new.invalid/";
@@ -24,29 +29,47 @@ it("supports rewriting requests", async () => {
 });
 
 it("supports typing the response", async () => {
-  const plugin: Plugin = {
-    onResponse(res) {
-      return res;
-    },
+  const plugin = {
+    onResponse: () => createTypedResponse(true),
   };
 
   const res = await createFetch(plugin)("http://host.invalid");
 
-  const body = await res.json();
+  expect(await res.json()).toBe(true);
 });
 
-// const p1: Plugin<{ wat: string }> = {
-//   onResponse: async (res) => {
-//     return res as Promise<TypedResponse<{ wat: string }>>;
-//   },
-// };
+it("supports returning early", async () => {
+  const plugin = {
+    onEarlyResponse: () => createTypedResponse(true),
+  };
 
-// const p2: Plugin<{ nah: string }> = {
-//   onResponse: async (res) => {
-//     return res as Promise<TypedResponse<{ nah: string }>>;
-//   },
-// };
+  const res = await createFetch(plugin)("http://host.invalid");
 
-// const p3: Plugin = {};
+  expect(await res.json()).toBe(true);
+});
 
-// export const f = createFetch(p2, p1, p3);
+describe("error handling", () => {
+  it("supports returning a response when an error is caught", async () => {
+    const plugin = {
+      onError: () => createTypedResponse("recovered"),
+    };
+
+    server.use(http.get("*", () => HttpResponse.error()));
+
+    const res = await createFetch(plugin)("http://host.invalid");
+
+    expect(await res.json()).toBe("recovered");
+  });
+
+  it("supports not returning anything when an error is caught", async () => {
+    const plugin: Plugin = {
+      onError: () => undefined,
+    };
+
+    server.use(http.get("*", () => HttpResponse.error()));
+
+    await expect(() =>
+      createFetch(plugin)("http://host.invalid"),
+    ).rejects.toThrowError("Failed to fetch");
+  });
+});

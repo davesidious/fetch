@@ -1,25 +1,36 @@
 import { Plugin, FetchArgs, TypedResponse, ResponseShape } from "./types";
 
-export const createFetch =
-  <Plugins extends Plugin[]>(...plugins: Plugins) =>
-  (...args: FetchArgs): Promise<TypedResponse<ResponseShape<Plugins>>> => {
-    const req = new Request(...args);
+export const createFetch = <
+  Plugins extends Plugin[],
+  Res extends TypedResponse = TypedResponse<ResponseShape<Plugins>>,
+>(
+  ...plugins: Plugins
+) => {
+  const getFns = <Fn extends keyof Plugin>(fn: Fn): Plugin[Fn][] =>
+    plugins.filter((p) => fn in p).map((p) => p[fn]);
 
-    const finalReq = plugins
-      .filter((p) => "onRequest" in p)
-      .reduce((req, p) => p.onRequest(req), req);
+  return (...args: FetchArgs): Promise<Res> => {
+    const req = getFns("onRequest").reduce(
+      (req, p) => p(req),
+      new Request(...args),
+    );
 
-    const earlyResponse = plugins
-      .filter((p) => "onEarlyResponse" in p)
-      .reduce<Promise<
-        TypedResponse<unknown>
-      > | void>((res, p) => res || p.onEarlyResponse(req), undefined);
+    const earlyResponse: Promise<Res> = getFns("onEarlyResponse").reduce(
+      (res, p) => res.then((res) => res || Promise.resolve(p(req))),
+      Promise.resolve(undefined),
+    );
 
-    const resPromise = earlyResponse || fetch(finalReq);
+    const res = earlyResponse.then((res) => res || fetch(req));
 
-    return plugins
-      .filter((p) => "onResponse" in p)
-      .reduce((resPromise, p) => {
-        return Promise.resolve(p.onResponse(resPromise, req));
-      }, resPromise);
+    return getFns("onResponse")
+      .reduce((res, p) => res.then((res) => p(res, req)), res)
+      .catch((err) =>
+        getFns("onError")
+          .reduce(
+            (res, p) => res.then((res) => res || Promise.resolve(p(err))),
+            Promise.resolve(undefined),
+          )
+          .then((res) => res || Promise.reject(err)),
+      );
   };
+};
