@@ -1,4 +1,4 @@
-import { intercept, Match } from "intercept-plugin";
+import { intercept, Match } from "@fetch-monorepo/intercept-plugin";
 
 export const mockResponse = (
   match: Match = {},

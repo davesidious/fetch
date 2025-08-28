@@ -1,17 +1,17 @@
 {
-  "name": "validation-plugin",
+  "name": "@fetch-monorepo/validation-plugin",
   "version": "1.0.0",
   "exports": {
     ".": "./dist/validation.js"
   },
   "license": "MIT",
   "dependencies": {
-    "fetch": "*",
+    "@fetch-monorepo/fetch": "*",
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "linting": "*",
-    "testing": "*",
+    "@fetch-monorepo/linting": "*",
+    "@fetch-monorepo/testing": "*",
     "@fetch-monorepo/typescript": "*"
   },
   "scripts": {

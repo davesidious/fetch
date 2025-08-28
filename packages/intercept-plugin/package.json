@@ -1,5 +1,5 @@
 {
-  "name": "intercept-plugin",
+  "name": "@fetch-monorepo/intercept-plugin",
   "version": "1.0.0",
   "exports": {
     ".": "./dist/intercept.js"
@@ -7,9 +7,9 @@
   "license": "MIT",
   "devDependencies": {
     "@fetch-monorepo/typescript": "*",
-    "fetch": "*",
-    "linting": "*",
-    "testing": "*"
+    "@fetch-monorepo/fetch": "*",
+    "@fetch-monorepo/linting": "*",
+    "@fetch-monorepo/testing": "*"
   },
   "scripts": {
     "build": "tsc --build"

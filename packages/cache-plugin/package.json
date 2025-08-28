@@ -1,5 +1,5 @@
 {
-  "name": "cache-plugin",
+  "name": "@fetch-monorepo/cache-plugin",
   "version": "1.0.0",
   "exports": {
     ".": "./dist/cache.js"
@@ -9,13 +9,13 @@
     "@types/http-cache-semantics": "^4.0.4",
     "http-cache-semantics": "^4.1.1",
     "lru-cache": "^11.0.2",
-    "debugging": "*"
+    "@fetch-monorepo/debugging": "*"
   },
   "devDependencies": {
     "@fetch-monorepo/typescript": "*",
-    "fetch": "*",
-    "linting": "*",
-    "testing": "*"
+    "@fetch-monorepo/fetch": "*",
+    "@fetch-monorepo/linting": "*",
+    "@fetch-monorepo/testing": "*"
   },
   "scripts": {
     "build": "tsc --build",

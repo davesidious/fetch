@@ -3,6 +3,10 @@
   "include": ["./src"],
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./dist",
-  }
+    "outDir": "./dist"
+  },
+  "references": [
+    { "path": "../debugging" },
+    { "path": "../fetch" }
+  ]
 }
