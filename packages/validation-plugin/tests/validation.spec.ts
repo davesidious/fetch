@@ -1,5 +1,5 @@
-import { buildFetch, Plugin } from "fetch";
-import { expect, it } from "testing";
+import { buildFetch, Plugin } from "@fetch-monorepo/fetch";
+import { expect, it } from "@fetch-monorepo/testing";
 
 import { schema, validationPlugin } from "../src/validation";
 

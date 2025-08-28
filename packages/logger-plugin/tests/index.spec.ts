@@ -1,6 +1,6 @@
-import { expect, it } from "testing";
+import { expect, it } from "@fetch-monorepo/testing";
 
-import * as index from "../src/";
+import * as index from "../src/logger";
 import { loggerPlugin } from "../src/logger";
 
 it("exports the correct files", () => {

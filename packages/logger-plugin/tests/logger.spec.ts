@@ -1,5 +1,5 @@
-import { buildFetch } from "fetch";
-import { expect, it, mockResponse, vi } from "testing";
+import { buildFetch } from "@fetch-monorepo/fetch";
+import { expect, it, mockResponse, vi } from "@fetch-monorepo/testing";
 
 import { loggerPlugin } from "../src/logger";
 

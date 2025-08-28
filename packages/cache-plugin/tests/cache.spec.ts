@@ -1,5 +1,5 @@
-import { buildFetch } from "fetch";
-import { expect, it } from "testing";
+import { buildFetch } from "@fetch-monorepo/fetch";
+import { expect, it } from "@fetch-monorepo/testing";
 
 import { cachePlugin } from "../src/cache";
 

@@ -1,5 +1,5 @@
-import { buildFetch, wrapFetch } from "fetch";
-import { describe, expect, it } from "testing";
+import { buildFetch, wrapFetch } from "@fetch-monorepo/fetch";
+import { describe, expect, it } from "@fetch-monorepo/testing";
 
 import { intercept } from "../src/intercept";
 

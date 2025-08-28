@@ -1,5 +1,16 @@
-import { afterAll, afterEach, beforeAll, describe, expect, it } from "testing";
-import { http, HttpResponse, setupServer } from "testing/mockServer";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  expect,
+  it,
+} from "@fetch-monorepo/testing";
+import {
+  http,
+  HttpResponse,
+  setupServer,
+} from "@fetch-monorepo/testing/mockServer";
 
 import { buildFetch } from "../src/buildFetch";
 import { Plugin, TypedResponse } from "../src/types";
