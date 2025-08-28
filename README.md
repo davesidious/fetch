@@ -13,6 +13,8 @@ Each created `fetch()` function will have the _exact_ same interface as the buil
 
 ## The most basic example
 
+This example shows how to replace the original `Request` object with one of your own creation.
+
 ```ts
   import { usePlugins, Plugin } from "@davesidious/fetch";
 
@@ -20,6 +22,6 @@ Each created `fetch()` function will have the _exact_ same interface as the buil
     onRequest: (req) => new Request(newUrl, req),
   });
 
-  // myFetch() will rewrite all requested URLs to http://new.invalid/
-  const myFetch = usePlugins(plugin("http://new.invalid/"));
+  // myFetch() will rewrite all requested URLs to http://new/
+  const myFetch = usePlugins(plugin("http://new/"));
 ```
