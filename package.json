@@ -9,13 +9,14 @@
     "tooling/*"
   ],
   "devDependencies": {
-    "linting": "*",
-    "testing": "*",
-    "typescript": "*"
+    "@fetch-monorepo/linting": "*",
+    "@fetch-monorepo/testing": "*",
+    "@fetch-monorepo/typescript": "*"
   },
   "scripts": {
     "build": "tsc --build",
     "lint": "eslint",
-    "test": "vitest"
+    "test": "vitest",
+    "clean": "rm -rf packages/*/dist"
   }
 }

@@ -1,1 +1,1 @@
-export { default } from "linting/config";
+export { default } from "@fetch-monorepo/linting/config";

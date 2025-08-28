@@ -1,5 +1,5 @@
 {
-  "name": "logger-plugin",
+  "name": "@fetch-monorepo/logger-plugin",
   "version": "1.0.0",
   "exports": {
     ".": "./dist/index.js"
@@ -7,10 +7,10 @@
   "license": "MIT",
   "devDependencies": {
     "@fetch-monorepo/typescript": "*",
-    "fetch": "*",
-    "linting": "*",
-    "testing": "*",
-    "debugging": "*"
+    "@fetch-monorepo/fetch": "*",
+    "@fetch-monorepo/linting": "*",
+    "@fetch-monorepo/testing": "*",
+    "@fetch-monorepo/debugging": "*"
   },
   "scripts": {
     "build": "tsc --build",

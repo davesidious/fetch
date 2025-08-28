@@ -1,9 +1,12 @@
 {
+  "compilerOptions": {
+    "composite": true
+  },
   "files": [],
   "references": [
+    { "path": "./packages/debugging" },
     { "path": "./packages/fetch" },
     { "path": "./packages/cache-plugin" },
-    { "path": "./packages/debugging" },
     { "path": "./packages/intercept-plugin" },
     { "path": "./packages/validation-plugin" },
   ]
