@@ -128,4 +128,26 @@ describe("error handling", () => {
 
     expect(await res.json()).toMatchObject({ url: "http://first.invalid/" });
   });
+
+  it("supports AbortControllers", async () => {
+    const url = "http://host.invalid";
+    const plugin: Plugin = () => ({
+      onRequest: (req) => new Request(url, req),
+    });
+
+    server.use(
+      http.get("http://host.invalid", () => HttpResponse.text("body")),
+    );
+
+    const abortController = new AbortController();
+    const req = new Request(url, { signal: abortController.signal });
+
+    const resPromise = usePlugins(plugin)(req);
+
+    const reason = "reason";
+
+    abortController.abort(reason);
+
+    await expect(() => resPromise).rejects.toThrowError(reason);
+  });
 });

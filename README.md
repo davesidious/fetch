@@ -14,7 +14,7 @@ Each created `fetch()` function will have the _exact_ same interface as the buil
 ## The most basic example
 
 ```ts
-  import { usePlugins, Plugin } from '@davesidious/fetch';
+  import { usePlugins, Plugin } from "@davesidious/fetch";
 
   const plugin: Plugin = (newUrl: string) => () => ({
     onRequest: (req) => new Request(newUrl, req),
