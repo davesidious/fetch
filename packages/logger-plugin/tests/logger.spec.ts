@@ -1,12 +1,12 @@
-import { buildFetch } from "@fetch-monorepo/fetch";
-import { expect, it, mockResponse, vi } from "@fetch-monorepo/testing";
+import { usePlugins } from "@davesidious/fetch";
+import { expect, it, mockResponse, vi } from "@davesidious/testing";
 
 import { loggerPlugin } from "../src/logger";
 
 it("calls a callback on each request", async () => {
   const callback = vi.fn();
   const plugin = loggerPlugin(callback);
-  const fetch = buildFetch(plugin, mockResponse());
+  const fetch = usePlugins(plugin, mockResponse());
 
   await fetch("http://site.invalid");
 

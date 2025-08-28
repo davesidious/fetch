@@ -1,4 +1,4 @@
-import { Plugin } from "@fetch-monorepo/fetch";
+import { Plugin } from "@davesidious/fetch";
 import schema from "zod";
 export * as schema from "zod";
 

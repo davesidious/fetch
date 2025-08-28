@@ -1,5 +1,5 @@
-import makeDebug from "@fetch-monorepo/debugging";
-import { Plugin } from "@fetch-monorepo/fetch";
+import makeDebug from "@davesidious/debugging";
+import { Plugin } from "@davesidious/fetch";
 import CachePolicy from "http-cache-semantics";
 import { LRUCache } from "lru-cache";
 

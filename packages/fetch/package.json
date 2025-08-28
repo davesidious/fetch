@@ -1,5 +1,5 @@
 {
-  "name": "@fetch-monorepo/fetch",
+  "name": "@davesidious/fetch",
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,8 +10,8 @@
     "test": "vitest src"
   },
   "devDependencies": {
-    "@fetch-monorepo/linting": "*",
-    "@fetch-monorepo/testing": "*",
-    "@fetch-monorepo/typescript": "*"
+    "@davesidious/linting": "*",
+    "@davesidious/testing": "*",
+    "@davesidious/typescript": "*"
   }
 }

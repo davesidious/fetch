@@ -1,5 +1,5 @@
 {
-  "name": "@fetch-monorepo/testing",
+  "name": "@davesidious/testing",
   "version": "1.0.0",
   "license": "MIT",
   "exports": {
@@ -11,6 +11,6 @@
     "@vitest/ui": "^3.0.3",
     "msw": "^2.7.0",
     "vitest": "^3.0.3",
-    "@fetch-monorepo/intercept-plugin": "*"
+    "@davesidious/intercept-plugin": "*"
   }
 }

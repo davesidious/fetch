@@ -1,4 +1,4 @@
-import { expect, it } from "@fetch-monorepo/testing";
+import { expect, it } from "@davesidious/testing";
 import debug from "debug";
 
 import defaultImport from "../src";

@@ -5,15 +5,15 @@ import {
   describe,
   expect,
   it,
-} from "@fetch-monorepo/testing";
+} from "@davesidious/testing";
 import {
   http,
   HttpResponse,
   setupServer,
-} from "@fetch-monorepo/testing/mockServer";
+} from "@davesidious/testing/mockServer";
 
-import { buildFetch } from "../src/buildFetch";
 import { Plugin, TypedResponse } from "../src/types";
+import { usePlugins } from "../src/usePlugins";
 
 const server = setupServer(
   http.get("*", ({ request }) => HttpResponse.json({ url: request.url })),
@@ -34,7 +34,7 @@ it("supports rewriting requests", async () => {
     onRequest: (req) => new Request(newUrl, req),
   });
 
-  const res = await buildFetch(plugin)("http://host.invalid");
+  const res = await usePlugins(plugin)("http://host.invalid");
 
   expect(await res.json()).toMatchObject({ url: newUrl });
 });
@@ -60,14 +60,14 @@ it("supports multiple onResponse plugins, async and not", async () => {
     () => ({ postFetch: async () => createTypedResponse("third") }),
   ] as const;
 
-  const res = await buildFetch(...plugins)("http://host.invalid");
+  const res = await usePlugins(...plugins)("http://host.invalid");
   const body = await res.json();
 
   expect(body).toBe("third");
 });
 
 it("supports typing the response", async () => {
-  const fetch = buildFetch(
+  const fetch = usePlugins(
     () => ({ postFetch: () => createTypedResponse(true) }),
     () => ({ postFetch: () => void 0 }),
   );
@@ -82,7 +82,7 @@ it("supports returning early", async () => {
     preFetch: () => createTypedResponse(true),
   });
 
-  const res = await buildFetch(plugin)("http://host.invalid");
+  const res = await usePlugins(plugin)("http://host.invalid");
   const body = await res.json();
 
   expect(body).toBe(true);
@@ -96,7 +96,7 @@ describe("error handling", () => {
 
     server.use(http.get("http://host.invalid", () => HttpResponse.error()));
 
-    const res = await buildFetch(plugin)("http://host.invalid");
+    const res = await usePlugins(plugin)("http://host.invalid");
 
     expect(await res.json()).toMatchObject({
       url: "http://recovered.invalid/",
@@ -111,7 +111,7 @@ describe("error handling", () => {
     server.use(http.get("*", () => HttpResponse.error()));
 
     await expect(() =>
-      buildFetch(plugin)("http://host.invalid"),
+      usePlugins(plugin)("http://host.invalid"),
     ).rejects.toThrowError("Failed to fetch");
   });
 
@@ -124,7 +124,7 @@ describe("error handling", () => {
 
     server.use(http.get("http://host.invalid", () => HttpResponse.error()));
 
-    const res = await buildFetch(...plugins)("http://host.invalid");
+    const res = await usePlugins(...plugins)("http://host.invalid");
 
     expect(await res.json()).toMatchObject({ url: "http://first.invalid/" });
   });

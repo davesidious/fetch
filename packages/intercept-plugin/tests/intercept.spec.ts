@@ -1,9 +1,9 @@
-import { buildFetch, wrapFetch } from "@fetch-monorepo/fetch";
-import { describe, expect, it } from "@fetch-monorepo/testing";
+import { applyPlugins, usePlugins } from "@davesidious/fetch";
+import { describe, expect, it } from "@davesidious/testing";
 
 import { intercept } from "../src/intercept";
 
-const mockedFetch = buildFetch(() => ({
+const mockedFetch = usePlugins(() => ({
   preFetch: () => new Response("not intercepted"),
 }));
 
@@ -15,7 +15,7 @@ describe("intercepts matched routes", () => {
   it("matches by method", async () => {
     const plugin = intercept({ method }, () => new Response("intercepted"));
 
-    const res = await wrapFetch(mockedFetch, plugin)(url, { method });
+    const res = await applyPlugins(mockedFetch, plugin)(url, { method });
 
     expect(await res.text()).toBe("intercepted");
   });
@@ -26,13 +26,13 @@ describe("intercepts matched routes", () => {
       () => new Response("intercepted"),
     );
 
-    const res = await wrapFetch(mockedFetch, plugin)(url);
+    const res = await applyPlugins(mockedFetch, plugin)(url);
 
     expect(await res.text()).toBe("intercepted");
   });
 
   it("supports limiting interceptions via a counter", async () => {
-    const fetch = wrapFetch(
+    const fetch = applyPlugins(
       mockedFetch,
       intercept({ count: 1 }, () => new Response("first")),
       intercept({ count: 2 }, () => new Response("second")),
@@ -49,7 +49,10 @@ it("does not intercept unmatched routes", async () => {
     () => new Response("intercepted"),
   );
 
-  const res = await wrapFetch(mockedFetch, plugin)("http://different.invalid");
+  const res = await applyPlugins(
+    mockedFetch,
+    plugin,
+  )("http://different.invalid");
 
   expect(await res.text()).toBe("not intercepted");
 });

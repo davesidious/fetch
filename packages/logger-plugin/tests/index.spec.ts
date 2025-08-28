@@ -1,4 +1,4 @@
-import { expect, it } from "@fetch-monorepo/testing";
+import { expect, it } from "@davesidious/testing";
 
 import * as index from "../src/logger";
 import { loggerPlugin } from "../src/logger";

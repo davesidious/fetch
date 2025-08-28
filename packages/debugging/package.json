@@ -1,5 +1,5 @@
 {
-  "name": "@fetch-monorepo/debugging",
+  "name": "@davesidious/debugging",
   "version": "1.0.0",
   "types": "dist/index.d.ts",
   "exports": {
@@ -11,8 +11,8 @@
     "debug": "^4.4.0"
   },
   "devDependencies": {
-    "@fetch-monorepo/linting": "*",
-    "@fetch-monorepo/typescript": "*"
+    "@davesidious/linting": "*",
+    "@davesidious/typescript": "*"
   },
   "scripts": {
     "build": "tsc --build"

@@ -1,5 +1,5 @@
-import { buildFetch, Plugin } from "@fetch-monorepo/fetch";
-import { expect, it } from "@fetch-monorepo/testing";
+import { Plugin, usePlugins } from "@davesidious/fetch";
+import { expect, it } from "@davesidious/testing";
 
 import { schema, validationPlugin } from "../src/validation";
 
@@ -11,7 +11,7 @@ it("validates response bodies", async () => {
   const plugin = validationPlugin(
     schema.object({ foo: schema.literal("bar") }),
   );
-  const fetch = buildFetch(mockResponse({ foo: "bar" }), plugin);
+  const fetch = usePlugins(mockResponse({ foo: "bar" }), plugin);
 
   const res = await fetch("http://host.invalid");
   const body = await res.json();
@@ -24,7 +24,7 @@ it("throws an error if the body does not validate against the schema", async () 
   const plugin = validationPlugin(
     schema.object({ foo: schema.literal("bar") }),
   );
-  const fetch = buildFetch(mockResponse({ foo: "baz" }), plugin);
+  const fetch = usePlugins(mockResponse({ foo: "baz" }), plugin);
 
   const res = fetch("http://host.invalid");
 
