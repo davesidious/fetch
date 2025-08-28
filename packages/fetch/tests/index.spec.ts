@@ -1,4 +1,4 @@
-import { expect, it } from "testing";
+import { expect, it } from "@fetch-monorepo/testing";
 
 import * as index from "../src/";
 import { buildFetch } from "../src/buildFetch";

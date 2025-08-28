@@ -1,4 +1,4 @@
-import { Plugin } from "fetch";
+import { Plugin } from "@fetch-monorepo/fetch";
 
 export const loggerPlugin =
   (onRequest: OnRequest): Plugin =>
