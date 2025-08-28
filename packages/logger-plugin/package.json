@@ -9,8 +9,7 @@
     "@davesidious/typescript": "*",
     "@davesidious/fetch": "*",
     "@davesidious/linting": "*",
-    "@davesidious/testing": "*",
-    "@davesidious/debugging": "*"
+    "@davesidious/testing": "*"
   },
   "scripts": {
     "build": "tsc --build",

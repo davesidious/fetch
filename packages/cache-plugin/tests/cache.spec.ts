@@ -1,5 +1,5 @@
 import { usePlugins } from "@davesidious/fetch";
-import { expect, it } from "@davesidious/testing";
+import { expect, it, vi } from "@davesidious/testing";
 
 import { cachePlugin } from "../src/cache";
 
@@ -12,7 +12,8 @@ it("caches responses", async () => {
       }),
   });
 
-  const plugin = cachePlugin({}, { max: 2 });
+  const onCache = vi.fn();
+  const plugin = cachePlugin({}, { max: 2 }, onCache);
   const fetch = usePlugins(plugin, responsePlugin);
 
   const makeRequest = async () => (await fetch("http://site.invalid")).text();
@@ -20,7 +21,11 @@ it("caches responses", async () => {
   const val1 = await makeRequest();
 
   expect(await makeRequest()).toBe(val1);
+  expect(onCache).toHaveBeenCalledWith("miss");
+  expect(onCache).toHaveBeenCalledWith("stored");
+
   expect(await makeRequest()).toBe(val1);
+  expect(onCache).toHaveBeenCalledWith("hit");
 
   await new Promise((resolve) => setTimeout(resolve, cacheTtl * 1.1));
 

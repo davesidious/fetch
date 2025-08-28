@@ -1,4 +1,3 @@
-import makeDebug from "@davesidious/debugging";
 import { Plugin } from "@davesidious/fetch";
 import CachePolicy from "http-cache-semantics";
 import { LRUCache } from "lru-cache";
@@ -8,9 +7,8 @@ import { convert, replaceHeaders } from "./utils";
 export const cachePlugin = (
   httpOpts: CachePolicy.Options,
   cacheOpts: CacheOptions,
-  name = "http-cache",
+  onCache?: (state: "hit" | "miss" | "stored") => void,
 ): Plugin => {
-  const debug = makeDebug(name);
   const cache = new LRUCache<CacheKey, CacheEntry>(cacheOpts);
 
   return () => {
@@ -21,11 +19,13 @@ export const cachePlugin = (
         const { policy, res } = cache.get(req.url) ?? {};
 
         if (res && policy?.satisfiesWithoutRevalidation(convert(req))) {
-          debug("cache hit");
+          onCache?.("hit");
           cacheHit = true;
 
           return replaceHeaders(res, policy.responseHeaders());
-        } else debug("cache miss");
+        } else {
+          onCache?.("miss");
+        }
       },
 
       postFetch(res, req) {
@@ -34,7 +34,7 @@ export const cachePlugin = (
 
           if (policy.storable()) {
             cache.set(req.url, { policy, res }, { ttl: policy.timeToLive() });
-            debug("cache stored");
+            onCache?.("stored");
           }
         }
 

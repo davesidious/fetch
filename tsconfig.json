@@ -4,7 +4,6 @@
   },
   "files": [],
   "references": [
-    { "path": "./packages/debugging" },
     { "path": "./packages/fetch" },
     { "path": "./packages/cache-plugin" },
     { "path": "./packages/intercept-plugin" },

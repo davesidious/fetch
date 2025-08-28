@@ -6,7 +6,6 @@
     "outDir": "./dist"
   },
   "references": [
-    { "path": "../debugging" },
     { "path": "../fetch" }
   ]
 }
