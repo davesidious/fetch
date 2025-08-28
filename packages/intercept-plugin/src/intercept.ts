@@ -1,4 +1,4 @@
-import type { Plugin } from "@fetch-monorepo/fetch";
+import type { Plugin } from "@davesidious/fetch";
 import UrlPattern from "url-pattern";
 
 export const intercept =

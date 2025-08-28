@@ -1,5 +1,5 @@
-import { buildFetch } from "@fetch-monorepo/fetch";
-import { expect, it } from "@fetch-monorepo/testing";
+import { usePlugins } from "@davesidious/fetch";
+import { expect, it } from "@davesidious/testing";
 
 import { cachePlugin } from "../src/cache";
 
@@ -13,7 +13,7 @@ it("caches responses", async () => {
   });
 
   const plugin = cachePlugin({}, { max: 2 });
-  const fetch = buildFetch(plugin, responsePlugin);
+  const fetch = usePlugins(plugin, responsePlugin);
 
   const makeRequest = async () => (await fetch("http://site.invalid")).text();
 

@@ -1,9 +1,9 @@
-import { expect, it } from "@fetch-monorepo/testing";
+import { expect, it } from "@davesidious/testing";
 
 import * as index from "../src/";
-import { buildFetch } from "../src/buildFetch";
-import { wrapFetch } from "../src/wrapFetch";
+import { applyPlugins } from "../src/applyPlugins";
+import { usePlugins } from "../src/usePlugins";
 
 it("exports the correct files", () => {
-  expect(index).toMatchObject({ buildFetch, wrapFetch });
+  expect(index).toMatchObject({ usePlugins, applyPlugins });
 });

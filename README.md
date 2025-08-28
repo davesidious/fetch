@@ -14,13 +14,12 @@ Each created `fetch()` function will have the _exact_ same interface as the buil
 ## The most basic example
 
 ```ts
-  import { buildFetch, Plugin } from '@davesidious/fetch';
+  import { usePlugins, Plugin } from '@davesidious/fetch';
 
-  const newUrl = "http://new.invalid/";
-  const plugin: Plugin = () => ({
+  const plugin: Plugin = (newUrl: string) => () => ({
     onRequest: (req) => new Request(newUrl, req),
   });
 
   // myFetch() will rewrite all requested URLs to http://new.invalid/
-  const myFetch = buildFetch(plugin);
+  const myFetch = usePlugins(plugin("http://new.invalid/"));
 ```

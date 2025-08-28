@@ -1,3 +1,3 @@
-export * from "./buildFetch";
+export * from "./applyPlugins";
 export type * from "./types";
-export * from "./wrapFetch";
+export * from "./usePlugins";

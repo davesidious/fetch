@@ -1,6 +1,6 @@
 import { Fetch, FetchArgs, Plugin, ResponseType, TypedResponse } from "./types";
 
-export const wrapFetch =
+export const applyPlugins =
   <Plugins extends Plugin[], Res = ResponseType<Plugins>>(
     fetch: Fetch,
     ...plugins: Plugins
@@ -33,7 +33,7 @@ export const wrapFetch =
 
       if (!errReq) throw err;
 
-      return wrapFetch<Plugins, Res>(fetch, ...plugins)(errReq);
+      return applyPlugins<Plugins, Res>(fetch, ...plugins)(errReq);
     }
   };
 

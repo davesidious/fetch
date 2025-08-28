@@ -1,5 +1,5 @@
 {
-  "name": "fetch-monorepo",
+  "name": "@davesidious/fetch",
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
@@ -9,9 +9,9 @@
     "tooling/*"
   ],
   "devDependencies": {
-    "@fetch-monorepo/linting": "*",
-    "@fetch-monorepo/testing": "*",
-    "@fetch-monorepo/typescript": "*"
+    "@davesidious/linting": "*",
+    "@davesidious/testing": "*",
+    "@davesidious/typescript": "*"
   },
   "scripts": {
     "build": "tsc --build",

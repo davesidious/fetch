@@ -1,16 +1,16 @@
 {
-  "name": "@fetch-monorepo/logger-plugin",
+  "name": "@davesidious/logger-plugin",
   "version": "1.0.0",
   "exports": {
     ".": "./dist/index.js"
   },
   "license": "MIT",
   "devDependencies": {
-    "@fetch-monorepo/typescript": "*",
-    "@fetch-monorepo/fetch": "*",
-    "@fetch-monorepo/linting": "*",
-    "@fetch-monorepo/testing": "*",
-    "@fetch-monorepo/debugging": "*"
+    "@davesidious/typescript": "*",
+    "@davesidious/fetch": "*",
+    "@davesidious/linting": "*",
+    "@davesidious/testing": "*",
+    "@davesidious/debugging": "*"
   },
   "scripts": {
     "build": "tsc --build",

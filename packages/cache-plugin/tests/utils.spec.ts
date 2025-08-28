@@ -1,4 +1,4 @@
-import { describe, expect, it } from "@fetch-monorepo/testing";
+import { describe, expect, it } from "@davesidious/testing";
 
 import { replaceHeaders } from "../src/utils";
 
