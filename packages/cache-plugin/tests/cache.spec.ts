@@ -16,7 +16,7 @@ it("caches responses", async () => {
   const plugin = cachePlugin({}, { max: 2 }, onCache);
   const fetch = usePlugins(plugin, responsePlugin);
 
-  const makeRequest = async () => (await fetch("http://site.invalid")).text();
+  const makeRequest = async () => (await fetch("http://host.invalid")).text();
 
   const val1 = await makeRequest();
 

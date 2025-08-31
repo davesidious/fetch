@@ -4,4 +4,5 @@ export const mockResponse = (
   match: Match = {},
   body?: BodyInit | null,
   headers?: HeadersInit,
-) => intercept(match, () => new Response(body, { headers }));
+  status?: number,
+) => intercept(match, () => new Response(body, { status, headers }));

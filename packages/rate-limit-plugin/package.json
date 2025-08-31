@@ -1,20 +1,18 @@
 {
-  "name": "@davesidious/cache-plugin",
+  "name": "@davesidious/rate-limit-plugin",
   "version": "1.0.0",
   "exports": {
-    ".": "./dist/cache.js"
+    ".": "./dist/rateLimit.js"
   },
   "license": "MIT",
   "dependencies": {
-    "@types/http-cache-semantics": "^4.0.4",
-    "http-cache-semantics": "^4.1.1",
-    "lru-cache": "^11.0.2"
+    "parse-retry-after": "^0.1.2"
   },
   "devDependencies": {
-    "@davesidious/typescript": "*",
     "@davesidious/fetch": "*",
     "@davesidious/linting": "*",
-    "@davesidious/testing": "*"
+    "@davesidious/testing": "*",
+    "@davesidious/typescript": "*"
   },
   "scripts": {
     "build": "tsc --build",

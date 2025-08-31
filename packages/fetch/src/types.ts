@@ -1,4 +1,4 @@
-export type Plugin<ResBody = unknown> = () => {
+export type Plugin<ResBody = unknown> = (fetch: Fetch) => {
   /**
    * Allows a plugin to modify or replace the `Request` object passed to `fetch`.
    *

@@ -6,7 +6,8 @@ export const applyPlugins =
     ...plugins: Plugins
   ) =>
   async (...args: FetchArgs): Promise<TypedResponse<Res>> => {
-    const instances = plugins.map((p) => p());
+    const appliedFetch = applyPlugins<Plugins, Res>(fetch, ...plugins);
+    const instances = plugins.map((p) => p(appliedFetch));
 
     const getFns = <Fn extends keyof PluginInstance>(fn: Fn) =>
       instances
@@ -16,11 +17,12 @@ export const applyPlugins =
     let req = new Request(...args);
     let earlyRes: TypedResponse | void = void 0;
 
-    for (const fn of getFns("onRequest")) req = await fn(req);
-    for (const fn of getFns("preFetch")) earlyRes = earlyRes ?? (await fn(req));
+    for (const fn of getFns("onRequest")) req = await fn(req.clone());
+    for (const fn of getFns("preFetch"))
+      earlyRes = earlyRes ?? (await fn(req.clone()));
 
     try {
-      let res: TypedResponse<Res> = earlyRes ?? (await fetch(req));
+      let res: TypedResponse<Res> = earlyRes ?? (await fetch(req.clone()));
 
       for (const fn of getFns("postFetch")) res = (await fn(res, req)) ?? res;
 
@@ -33,7 +35,7 @@ export const applyPlugins =
 
       if (!errReq) throw err;
 
-      return applyPlugins<Plugins, Res>(fetch, ...plugins)(errReq);
+      return appliedFetch(errReq);
     }
   };
 

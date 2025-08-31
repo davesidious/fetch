@@ -10,6 +10,6 @@ export default defineConfig({
       exclude: ["tooling/**"],
       reporter: "lcov",
     },
-    ui: !process.env.CI,
+    // ui: !process.env.CI,
   },
 });

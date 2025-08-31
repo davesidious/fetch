@@ -8,7 +8,7 @@ it("calls a callback on each request", async () => {
   const plugin = loggerPlugin(callback);
   const fetch = usePlugins(plugin, mockResponse());
 
-  await fetch("http://site.invalid");
+  await fetch("http://host.invalid");
 
   expect(callback).toHaveBeenCalledOnce();
 
