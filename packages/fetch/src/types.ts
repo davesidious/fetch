@@ -1,4 +1,4 @@
-export type Plugin<ResBody = unknown> = (fetch: Fetch) => {
+export type Plugin<ResBody = unknown> = () => {
   /**
    * Allows a plugin to modify or replace the `Request` object passed to `fetch`.
    *
@@ -25,7 +25,7 @@ export type Plugin<ResBody = unknown> = (fetch: Fetch) => {
   postFetch?: (
     res: Response,
     req: Request,
-  ) => Promisable<TypedResponse<ResBody> | void>;
+  ) => Promisable<TypedResponse<ResBody> | Request | void>;
 
   /**
    * Defines an error handler. If no error handler returns a new request,
@@ -36,7 +36,10 @@ export type Plugin<ResBody = unknown> = (fetch: Fetch) => {
    * @returns a Request to be re-fetched by the same plugins, or void to pass
    *  to the next error handler.
    */
-  onError?: (err: unknown, req: Request) => Promisable<Request | void>;
+  onError?: (
+    err: unknown,
+    req: Request,
+  ) => Promisable<Request | Response | void>;
 };
 
 export type Fetch = (typeof globalThis)["fetch"];

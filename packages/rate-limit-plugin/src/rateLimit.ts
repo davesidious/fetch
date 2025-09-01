@@ -6,7 +6,7 @@ import parseRetryAfter from "parse-retry-after";
  */
 export const rateLimitPlugin =
   (onLimit?: (retryAfter: number) => void): Plugin =>
-  (fetch) => {
+  () => {
     return {
       async postFetch(res, req) {
         if (res.status !== 429) return;
@@ -16,14 +16,11 @@ export const rateLimitPlugin =
           : 30;
 
         onLimit?.(retryAfter);
+        const reqClone = req.clone();
 
         return new Promise((r) => {
-          setTimeout(() => r(fetch(req.clone())), retryAfter * 1000);
+          setTimeout(() => r(reqClone), retryAfter * 1000);
         });
-
-        // await new Promise((r) => setTimeout(r, retryAfter * 1000));
-
-        // return fetch(req.clone());
       },
     };
   };

@@ -28,68 +28,101 @@ const createTypedResponse = <B>(body: B): TypedResponse<B> =>
     headers: { "content-type": "application/json" },
   });
 
-it("supports rewriting requests", async () => {
-  const newUrl = "http://new.invalid/";
-  const plugin: Plugin = () => ({
-    onRequest: (req) => new Request(newUrl, req),
+describe("onRequest", () => {
+  it("supports rewriting requests", async () => {
+    const newUrl = "http://new.invalid/";
+    const plugin: Plugin = () => ({
+      onRequest: (req) => new Request(newUrl, req),
+    });
+
+    const res = await usePlugins(plugin)("http://host.invalid");
+
+    expect(await res.json()).toMatchObject({ url: newUrl });
+  });
+});
+
+describe("postFetch", () => {
+  it("supports multiple onResponse plugins, async and not", async () => {
+    expect.assertions(3);
+
+    const plugins = [
+      () => ({
+        postFetch: async (res: unknown) => {
+          expect(res).toBeInstanceOf(Response);
+
+          return createTypedResponse("first");
+        },
+      }),
+      () => ({
+        postFetch: (res: unknown) => {
+          expect(res).toBeInstanceOf(Response);
+
+          return createTypedResponse("second");
+        },
+      }),
+      () => ({ postFetch: async () => createTypedResponse("third") }),
+    ] as const;
+
+    const res = await usePlugins(...plugins)("http://host.invalid");
+    const body = await res.json();
+
+    expect(body).toBe("third");
   });
 
-  const res = await usePlugins(plugin)("http://host.invalid");
+  it("supports typing the response", async () => {
+    const fetch = usePlugins(
+      () => ({ postFetch: () => createTypedResponse(true) }),
+      () => ({ postFetch: () => void 0 }),
+    );
+    const res = await fetch("http://host.invalid");
+    const body = await res.json();
 
-  expect(await res.json()).toMatchObject({ url: newUrl });
-});
-
-it("supports multiple onResponse plugins, async and not", async () => {
-  expect.assertions(3);
-
-  const plugins = [
-    () => ({
-      postFetch: async (res: unknown) => {
-        expect(res).toBeInstanceOf(Response);
-
-        return createTypedResponse("first");
-      },
-    }),
-    () => ({
-      postFetch: (res: unknown) => {
-        expect(res).toBeInstanceOf(Response);
-
-        return createTypedResponse("second");
-      },
-    }),
-    () => ({ postFetch: async () => createTypedResponse("third") }),
-  ] as const;
-
-  const res = await usePlugins(...plugins)("http://host.invalid");
-  const body = await res.json();
-
-  expect(body).toBe("third");
-});
-
-it("supports typing the response", async () => {
-  const fetch = usePlugins(
-    () => ({ postFetch: () => createTypedResponse(true) }),
-    () => ({ postFetch: () => void 0 }),
-  );
-  const res = await fetch("http://host.invalid");
-  const body = await res.json();
-
-  expect(body).toBe(true);
-});
-
-it("supports returning early", async () => {
-  const plugin = () => ({
-    preFetch: () => createTypedResponse(true),
+    expect(body).toBe(true);
   });
 
-  const res = await usePlugins(plugin)("http://host.invalid");
-  const body = await res.json();
+  it("supports plugins returning a response after fetching", async () => {
+    const plugin: Plugin = () => ({
+      postFetch: (_, req) => {
+        if (req.url !== "http://replaced.invalid/")
+          return new Request("http://replaced.invalid/");
+      },
+    });
 
-  expect(body).toBe(true);
+    const res = await usePlugins(plugin)("http://host.invalid");
+
+    expect(await res.json()).toMatchObject({
+      url: "http://replaced.invalid/",
+    });
+  });
+});
+
+describe("preFetch", () => {
+  it("supports returning early", async () => {
+    const plugin = () => ({
+      preFetch: () => createTypedResponse(true),
+    });
+
+    const res = await usePlugins(plugin)("http://host.invalid");
+    const body = await res.json();
+
+    expect(body).toBe(true);
+  });
 });
 
 describe("error handling", () => {
   it("supports returning a response when an error is caught", async () => {
+    const plugin = () => ({
+      onError: () => new Response("returned"),
+    });
+
+    server.use(http.get("http://host.invalid", () => HttpResponse.error()));
+
+    const res = await usePlugins(plugin)("http://host.invalid");
+
+    expect(await res.text()).toBe("returned");
+  });
+
+  it("supports returning a request when an error is caught", async () => {
     const plugin = () => ({
       onError: () => new Request("http://recovered.invalid"),
     });
@@ -128,26 +161,24 @@ describe("error handling", () => {
 
     expect(await res.json()).toMatchObject({ url: "http://first.invalid/" });
   });
+});
 
-  it("supports AbortControllers", async () => {
-    const url = "http://host.invalid";
-    const plugin: Plugin = () => ({
-      onRequest: (req) => new Request(url, req),
-    });
-
-    server.use(
-      http.get("http://host.invalid", () => HttpResponse.text("body")),
-    );
-
-    const abortController = new AbortController();
-    const req = new Request(url, { signal: abortController.signal });
-
-    const resPromise = usePlugins(plugin)(req);
-
-    const reason = "reason";
-
-    abortController.abort(reason);
-
-    await expect(() => resPromise).rejects.toThrowError(reason);
+it("supports AbortControllers", async () => {
+  const url = "http://host.invalid";
+  const plugin: Plugin = () => ({
+    onRequest: (req) => new Request(url, req),
   });
+
+  server.use(http.get("http://host.invalid", () => HttpResponse.text("body")));
+
+  const abortController = new AbortController();
+  const req = new Request(url, { signal: abortController.signal });
+
+  const resPromise = usePlugins(plugin)(req);
+
+  const reason = "reason";
+
+  abortController.abort(reason);
+
+  await expect(() => resPromise).rejects.toThrowError(reason);
 });

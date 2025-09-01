@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "tsx ./src",
     "build": "tsc --build",
-    "test": "vitest src"
+    "test": "vitest"
   },
   "devDependencies": {
     "@davesidious/linting": "*",

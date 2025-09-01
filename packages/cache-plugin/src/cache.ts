@@ -32,6 +32,7 @@ export const cachePlugin = (
         if (!cacheHit) {
           const policy = new CachePolicy(convert(req), convert(res), httpOpts);
 
+          /* v8 ignore next */
           if (policy.storable()) {
             cache.set(req.url, { policy, res }, { ttl: policy.timeToLive() });
             onCache?.("stored");

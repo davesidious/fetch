@@ -30,7 +30,7 @@ it("retries on a 429 response with a retry-after header", async () => {
 });
 
 it("retries on a 429 response without a retry-after header after 30 seconds", async () => {
-  expect.assertions(3);
+  expect.assertions(2);
 
   const fetch = usePlugins(
     mockResponse({ count: 1 }, "limited", {}, 429),
