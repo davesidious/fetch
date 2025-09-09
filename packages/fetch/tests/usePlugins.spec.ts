@@ -41,6 +41,19 @@ describe("onRequest", () => {
   });
 });
 
+describe("preFetch", () => {
+  it("supports returning early", async () => {
+    const plugin = () => ({
+      preFetch: () => createTypedResponse(true),
+    });
+
+    const res = await usePlugins(plugin)("http://host.invalid");
+    const body = await res.json();
+
+    expect(body).toBe(true);
+  });
+});
+
 describe("postFetch", () => {
   it("supports multiple onResponse plugins, async and not", async () => {
     expect.assertions(3);
@@ -96,32 +109,34 @@ describe("postFetch", () => {
   });
 });
 
-describe("preFetch", () => {
-  it("supports returning early", async () => {
-    const plugin = () => ({
-      preFetch: () => createTypedResponse(true),
-    });
+describe("onFinish", () => {
+  it("is called after plugins have been run on the Request and Response", async () => {
+    expect.assertions(2);
 
-    const res = await usePlugins(plugin)("http://host.invalid");
-    const body = await res.json();
+    const plugins: Plugin[] = [
+      () => ({
+        async onFinish(req, res) {
+          expect(req.url).toBe("http://new.invalid/");
+          expect(await res.text()).toBe("body");
+        },
+      }),
+      () => ({
+        onRequest() {
+          return new Request("http://new.invalid/");
+        },
+      }),
+      () => ({
+        preFetch() {
+          return new Response("body");
+        },
+      }),
+    ];
 
-    expect(body).toBe(true);
+    await usePlugins(...plugins)("http://host.invalid");
   });
 });
 
 describe("error handling", () => {
-  it("supports returning a response when an error is caught", async () => {
-    const plugin = () => ({
-      onError: () => new Response("returned"),
-    });
-
-    server.use(http.get("http://host.invalid", () => HttpResponse.error()));
-
-    const res = await usePlugins(plugin)("http://host.invalid");
-
-    expect(await res.text()).toBe("returned");
-  });
-
   it("supports returning a request when an error is caught", async () => {
     const plugin = () => ({
       onError: () => new Request("http://recovered.invalid"),

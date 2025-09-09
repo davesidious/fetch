@@ -5,15 +5,15 @@ export const loggerPlugin =
   () => {
     let start: number;
 
-    function preFetch() {
-      start = Date.now();
-    }
+    return {
+      preFetch() {
+        start = Date.now();
+      },
 
-    async function postFetch(res: Response, req: Request) {
-      await onRequest(req, res, Date.now() - start);
-    }
-
-    return { preFetch, postFetch };
+      onFinish(req: Request, res: Response) {
+        return onRequest(req, res, Date.now() - start);
+      },
+    };
   };
 
 type OnRequest = (

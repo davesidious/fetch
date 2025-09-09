@@ -31,7 +31,6 @@ Or if you _are_ into the whole brevity thing, use `usePlugins`, which is functio
   const extendedFetch = usePlugins(...plugins);
 ```
 
-
 ## Plugins
 
 Plugins are where this starts to get exciting.  A plugin is a function which returns an object with zero or more of the following functions:
@@ -57,15 +56,20 @@ Plugins are where this starts to get exciting.  A plugin is a function which ret
 * A request, which is then passed back to your extended fetch function
 * A response, which is passed to the caller of your extended fetch function
 
+### `onFinish`
+
+* Type: `(req: Request, res: Response) => Awaitable<void>;`
+
+`plugin.onFinish` is called after the request has been finalised and the response has been calculated.  Both are passed to this function, allowing for profiling or analytics to see the full request & response pair.
+
 ### `onError`
 
-* Type: `(err: unknown, req: Request) => Request | Response | void | Promise<Request | Response | void>`
+* Type: `(err: unknown, req: Request) => Request | void | Promise<Request | void>`
 
 `plugin.onError` is called whenever an error occurs when making the request.  It can return (either directly or via `Promise`):
 
 * A request, which is then passed back to your extended fetch function
-* A response, which is passed to the caller of your extended fetch function
-* Nothing, in which case the next plugin's `onError` callback will be called.
+* Nothing, in which case the next plugin's `onError` callback will be called
 
 ## `TypedResponse`
 

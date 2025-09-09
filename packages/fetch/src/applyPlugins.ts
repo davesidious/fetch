@@ -33,16 +33,18 @@ export const applyPlugins =
             : (reqRes ?? res);
       }
 
+      for (const fn of getFns("onFinish")) await fn(req, res);
+
       return res;
     } catch (err) {
-      let reqRes: Request | Response | void = void 0;
+      let errReq: Request | void = void 0;
 
       for (const fn of getFns("onError"))
-        reqRes = reqRes ?? (await fn(err, req));
+        errReq = errReq ?? (await fn(err, req));
 
-      if (!reqRes) throw err;
+      if (!errReq) throw err;
 
-      return reqRes instanceof Request ? appliedFetch(reqRes) : reqRes;
+      return appliedFetch(errReq);
     }
   };
 

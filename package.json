@@ -15,7 +15,7 @@
   },
   "scripts": {
     "build": "tsc --build",
-    "lint": "eslint",
+    "lint": "lint",
     "test": "vitest",
     "clean": "rm -rf packages/*/dist"
   }
