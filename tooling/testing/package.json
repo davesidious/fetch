@@ -2,6 +2,7 @@
   "name": "@davesidious/testing",
   "version": "1.0.0",
   "license": "MIT",
+  "private": true,
   "exports": {
     ".": "./src/index.ts",
     "./mockServer": "./src/mockServer.ts"

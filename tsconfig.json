@@ -8,5 +8,7 @@
     { "path": "./packages/cache-plugin" },
     { "path": "./packages/intercept-plugin" },
     { "path": "./packages/validation-plugin" },
+    { "path": "./packages/rate-limit-plugin" },
+    { "path": "./packages/logger-plugin" },
   ]
 }

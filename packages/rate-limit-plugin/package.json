@@ -5,6 +5,7 @@
     ".": "./dist/rateLimit.js"
   },
   "license": "MIT",
+  "private": true,
   "dependencies": {
     "parse-retry-after": "^0.1.2"
   },

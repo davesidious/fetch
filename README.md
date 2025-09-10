@@ -58,7 +58,7 @@ Plugins are where this starts to get exciting.  A plugin is a function which ret
 
 ### `onFinish`
 
-* Type: `(req: Request, res: Response) => Awaitable<void>;`
+* Type: `(req: Request, res: Response) => void | Promise<void>;`
 
 `plugin.onFinish` is called after the request has been finalised and the response has been calculated.  Both are passed to this function, allowing for profiling or analytics to see the full request & response pair.
 
@@ -71,6 +71,22 @@ Plugins are where this starts to get exciting.  A plugin is a function which ret
 * A request, which is then passed back to your extended fetch function
 * Nothing, in which case the next plugin's `onError` callback will be called
 
-## `TypedResponse`
+## Typing the response
 
-This package provides a slight modification of the default `Response` type which supports typing a JSON body.  A plugin's `postFetch` method can return, in lieu of a `Response`, a `TypedResponse<T>`.  This is very useful for validating JSON bodies to ensure their type.  Your extended fetch method will share the return type of the last plugin which has a typed `postFetch` callback.
+A plugin can define the type of its JSON body:
+
+```ts
+  import { type Plugin, usePlugins } from "@davesidious/fetch";
+
+  const plugin: Plugin<string> = () => ({
+    async postFetch(res) {
+      return typeof (await res.clone().json()) === "string";
+    }
+  });
+
+  const extendedFetch = usePlugins(plugin);
+  const res = await extendedFetch("http://host/path");
+  const body: string = await res.json();
+```
+
+The calculated final type of the response body is created from an intersection type formed from the types specified by the plugins.  Using plugins with incompatible types will cause a TypeScript error.

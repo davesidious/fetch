@@ -5,6 +5,7 @@
     ".": "./dist/cache.js"
   },
   "license": "MIT",
+  "private": true,
   "dependencies": {
     "@types/http-cache-semantics": "^4.0.4",
     "http-cache-semantics": "^4.1.1",

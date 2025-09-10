@@ -17,7 +17,7 @@ export const replaceHeaders = (res: Response, headers: CachePolicy.Headers) => {
   return res;
 };
 
-const is = <T>(thing: T): thing is Exclude<T, undefined> => thing !== undefined;
+const is = <T>(thing: T | undefined): thing is T => thing !== undefined;
 
 const toArray = <T>(thing: T[] | T): T[] =>
   Array.isArray(thing) ? thing : [thing];

@@ -5,6 +5,7 @@
     ".": "./dist/intercept.js"
   },
   "license": "MIT",
+  "private": true,
   "devDependencies": {
     "@davesidious/typescript": "*",
     "@davesidious/fetch": "*",

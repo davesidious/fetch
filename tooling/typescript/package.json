@@ -2,6 +2,7 @@
   "name": "@davesidious/typescript",
   "version": "1.0.0",
   "license": "MIT",
+  "private": true,
   "dependencies": {
     "@types/node": "20",
     "tsx": "^4.19.2",

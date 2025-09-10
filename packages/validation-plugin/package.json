@@ -5,6 +5,7 @@
     ".": "./dist/validation.js"
   },
   "license": "MIT",
+  "private": true,
   "dependencies": {
     "@davesidious/fetch": "*",
     "zod": "^3.24.1"
